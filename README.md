@@ -1,3 +1,9 @@
+What?
+---
+
+XAJAX Bundle for laravel 3
+
+
 Installation
 ---
 
