@@ -56,7 +56,7 @@ View:
         $('#search-input-status').text("Typing...");
       });
       myBuffer.addEvent('donetyping', function() { 
-        if ($('#askjunn').val() == "") {
+        if ($('#askfield').val() == "") {
           $('#search-input-status').text("I'm waiting...");
         } else {
           $('#search-input-status').text("Ask more...");
