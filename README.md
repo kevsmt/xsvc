@@ -73,6 +73,34 @@ View:
   
     <div id="inputresult"></div>  
   
+Other Usage in JS:
+
+  xsvc.run('mycommandfromphp', [1,2,3,'arguments']);
+
+Using it with forms:
+
+PHP:
+
+    function processmysubmit($data) {
+      $r = xsvc::response();
+      $r->assign('result', 'innerHTML', json_encode($data));
+      $r->alert("done!"); // xsvc::alert("done!");
+      return $r;
+    }
+
+HTML:
+
+    <form class="form-group" action="javascript::void(0);" 
+          onsubmit="xsvc.processForm(this, 'processmysubmit'); return false;">
+      <div class="form-group-fields">
+        <input type="text" name="username" placeholder="Username" autofocus/>
+        <input type="password" name="password" placeholder="Password"/>
+      </div>
+      <button class="btn btn-success btn-medium" type="submit">Submit</button>
+    </form>
+
+    <div id="formresult"></div>
+
 Check if it worked:
 
     http://mylocalhost/laravel/public/
