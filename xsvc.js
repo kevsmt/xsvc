@@ -61,6 +61,24 @@ xsvc.run = function(command, params, config) {
 };
 
 /**
+ * Process Form
+ * @param  {Mixed}  form    Pass form id or object
+ * @param  {String} command Command
+ * @return {Void}
+ */
+xsvc.processForm = function(form, command) {
+  if (typeof form == "string") {
+    form = xjx.$(form);
+  }
+
+  if (!form) {
+    throw new Error('Form is not define or does not exists.')
+  }
+
+  xsvc.run(command, xjx.getFormValues(form));
+};
+
+/**
  * Call command with more control
  * @param  {String} command Command Name
  * @param  {Object} config  Object { parameter: [], context: {} }
