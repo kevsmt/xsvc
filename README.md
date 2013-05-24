@@ -77,7 +77,7 @@ View:
   
 Check if it worked:
 
-    http://mylocalhost/webapp/public/
+    http://mylocalhost/laravel/public/
 
 
 Good Luck!
