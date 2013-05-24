@@ -11,9 +11,7 @@ Add to `application/bundles.php`:
 
 `'xsvc' => array('auto' => true)`
 
-Goto https://github.com/Xajax/Xajax:
-
-Important: download the `xajax_js` and place it in your `public/js` folder.
+Goto https://github.com/Xajax/Xajax and (Important) download the `xajax_js` and place it in your `public/js` folder.
 
 
 Usage
