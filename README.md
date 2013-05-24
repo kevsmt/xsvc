@@ -83,7 +83,7 @@ PHP:
 
     function processmysubmit($data) {
       $r = xsvc::response();
-      $r->assign('result', 'innerHTML', json_encode($data));
+      $r->assign('formresult', 'innerHTML', json_encode($data));
       $r->alert("done!"); // xsvc::alert("done!");
       return $r;
     }
