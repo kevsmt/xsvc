@@ -1,3 +1,6 @@
+XAJAX Service
+=============
+
 What?
 ---
 
@@ -35,6 +38,7 @@ Controller:
       xsvc::initialize();
       xsvc::installPlugin('BufferText');
       xsvc::register(array(&$this, 'svc_asked'));
+      // xsvc::registerAllMethods($this, 'svc_');
       xsvc::serve();
 
       return View::make('home.index');
@@ -74,10 +78,12 @@ View:
     <div id="inputresult"></div>  
   
 Other Usage in JS:
+------------------
 
   xsvc.run('mycommandfromphp', [1,2,3,'arguments']);
 
 Using it with forms:
+--------------------
 
 PHP:
 
@@ -101,7 +107,32 @@ HTML:
 
     <div id="formresult"></div>
 
+PHP Static Class API:
+----
+- initialize()
+- configure(string, mixed) // an alias of XAJAX configure
+- configureMany(object) // an alias of XAJAX configureMany
+- registerAllMethods(object, string) // registers all methods with a prefix
+- register(mixed, string) // register a method, and the file to include on register
+- printJavascript() // print outs xsvc scripts and plugins
+- addScript(string) // javascript code to add, will be included on printJavascript()
+- installPlugin(string) // xsvc plugin to install
+- serve() // start serving methods to browser; xajax alias of processRequest
+- response() // an alias of XAJAX <-- new xajaxResponse();
+- alert(string) // an alias of XAJAX response()->alert("A")
+
+
+JS Namespaced API:
+----
+xsvc.commandExists(command)
+xsvc.run(command, parameters, additional configs)
+xsvc.call(command, additional configs)
+xsvc.processForm(form id/form object, command, additional configs)
+xsvc.addEvent(event name, callback) // global event
+
+
 Check if it worked:
+-------------------
 
     http://mylocalhost/laravel/public/
 

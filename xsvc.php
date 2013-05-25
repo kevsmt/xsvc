@@ -70,6 +70,27 @@ class xsvc
   }
 
   /**
+   * Auto Register all methods with a prefix; default 'svc_'
+   * @param  object $object       The Class Object
+   * @param  string $prefix       Method Prefix
+   * @return void
+   */
+  public static function registerAllMethods($object, $prefix = 'svc_')
+  {
+    if ($reflect = new ReflectionClass($object))
+    {
+      foreach ($reflect->getMethods() as $method) 
+      {
+        if (substr($method->name, 0, strlen($prefix)) == $prefix 
+            && $reflect->name == $method->class) 
+        {
+          self::register(array($object, $method->name));
+        }
+      }
+    }
+  }
+
+  /**
    * Register function
    *
    * Examples:
@@ -91,16 +112,6 @@ class xsvc
   {
     $xuf = new xajaxUserFunction($mFunction, $sIncludeFile);
     return self::$instance->register(XAJAX_FUNCTION, $xuf);
-  }
-
-  /**
-   * Check if $text has a dot
-   * @param  string  $text Text to match
-   * @return boolean
-   */
-  private static function isDotted($text) 
-  {
-    return strpos($text, '.') !== false;
   }
 
   /**

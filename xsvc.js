@@ -54,34 +54,18 @@ xsvc.run = function(command, params, config) {
   if (this.commandExists(command)) {
     return xajax.request({ 
       xjxfun: command
-    }, xsvc.util.applyIf({ parameters: [].concat(params) }, config));
+    }, xsvc.util.applyIf({ 
+      parameters: [].concat(params) 
+    }, config));
   } else {
     throw new Error('`' + command + '` is not defined.');
   }
 };
 
 /**
- * Process Form
- * @param  {Mixed}  form    Pass form id or object
- * @param  {String} command Command
- * @return {Void}
- */
-xsvc.processForm = function(form, command) {
-  if (typeof form == "string") {
-    form = xjx.$(form);
-  }
-
-  if (!form) {
-    throw new Error('Form is not define or does not exists.')
-  }
-
-  xsvc.run(command, xjx.getFormValues(form));
-};
-
-/**
  * Call command with more control
  * @param  {String} command Command Name
- * @param  {Object} config  Object { parameter: [], context: {} }
+ * @param  {Object} config  Object { parameters: [], context: {} }
  * @return {Mixed}
  */
 xsvc.call = function(command, config) {
@@ -93,7 +77,26 @@ xsvc.call = function(command, config) {
 };
 
 /**
- * Add XAJAX Event Callbacks
+ * Process Form
+ * @param  {Mixed}  form    Pass form id or object
+ * @param  {String} command Command
+ * param   {Object} config  Event Configs
+ * @return {Void}
+ */
+xsvc.processForm = function(form, command, config) {
+  if (typeof form == "string") {
+    form = xjx.$(form);
+  }
+
+  if (!form) {
+    throw new Error('Form is not define or does not exists.')
+  }
+
+  this.run(command, xjx.getFormValues(form), config);
+};
+
+/**
+ * Add XAJAX Event Callbacks (Global)
  * @param {String}   eventName  Event Name
  * @param {Function} callback   Function to call on event fire
  * return {void}
