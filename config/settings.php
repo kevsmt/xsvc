@@ -3,7 +3,7 @@
 return array(
   'debug' => false,
   'deferScriptGeneration' => false,
-  'responseType' => 'JSON',
+  'responseType' => 'XML',
   'defaultMode' => 'asynchronous',
   'defaultMethod' => 'POST',
   'javascript URI' => asset('js')

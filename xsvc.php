@@ -5,7 +5,7 @@
  * Service Class -- kevs (:
  * @static
  */
-class xsvc 
+class xsvc
 {
 
   /** Holds scripts to append on printJS
@@ -24,7 +24,7 @@ class xsvc
    * @var object=>xajax
    */
   protected static $instance = null;
-  
+
   /**
    * svc prefix
    * ! DO NOT CHANGE xsvc.js relies on this aswell
@@ -36,7 +36,7 @@ class xsvc
    * Initialize xsvc
    * @return void
    */
-  public static function initialize() 
+  public static function initialize()
   {
     // Load XAJAX on demand only
     require_once Bundle::path('xsvc').'lib/xajax_core/xajax.inc.php';
@@ -54,7 +54,7 @@ class xsvc
    * @param  mixed  $value Value
    * @return void
    */
-  public static function configure($key, $value) 
+  public static function configure($key, $value)
   {
     self::$instance->configure($key, $value);
   }
@@ -64,7 +64,7 @@ class xsvc
    * @param  array $configs configuration array stack
    * @return void
    */
-  public static function configureMany($configs) 
+  public static function configureMany($configs)
   {
     self::$instance->configureMany($configs);
   }
@@ -79,10 +79,10 @@ class xsvc
   {
     if ($reflect = new ReflectionClass($object))
     {
-      foreach ($reflect->getMethods() as $method) 
+      foreach ($reflect->getMethods() as $method)
       {
-        if (substr($method->name, 0, strlen($prefix)) == $prefix 
-            && $reflect->name == $method->class) 
+        if (substr($method->name, 0, strlen($prefix)) == $prefix
+            && $reflect->name == $method->class)
         {
           self::register(array($object, $method->name));
         }
@@ -94,7 +94,7 @@ class xsvc
    * Register function
    *
    * Examples:
-   * 
+   *
    *   $mFunction = array('alias', 'myClass', 'myMethod');
    *   $mFunction = array('alias', &$myObject, 'myMethod');
    *   $mFunction = array('myClass', 'myMethod');
@@ -102,26 +102,27 @@ class xsvc
    *   $mFunction = 'myFunction';
    *
    * Note: might not be available in future versions of xajax (<=0.5)
-   * 
+   *
    * @param  string $mFunction    Function name
-   * @param  string $sIncludeFile The server path to the PHP file to 
+   * @param  const  $sType        XAJAX TYPE
+   * @param  string $sIncludeFile The server path to the PHP file to
    *                              include when calling this function.
    * @return mixed
    */
-  public static function register($mFunction, $sIncludeFile = null) 
+  public static function register($mFunction, $stype = XAJAX_FUNCTION, $sIncludeFile = null)
   {
     $xuf = new xajaxUserFunction($mFunction, $sIncludeFile);
-    return self::$instance->register(XAJAX_FUNCTION, $xuf);
+    return self::$instance->register($stype, $xuf);
   }
 
   /**
    * Prints Javascripts
    * @return void
    */
-  public static function printJavascript() 
+  public static function printJavascript()
   {
     if (!self::$instance) throw new Exception('xsvc is not initialized.');
-    
+
     // Print our javascripts
     ob_start();
     echo '<script type="text/javascript">';
@@ -141,10 +142,10 @@ class xsvc
    * Add Script
    * @param string $script Javascript
    */
-  public static function addScript($script) 
+  public static function addScript($script)
   {
     $script = trim($script);
-    if ( ! empty($script)) 
+    if ( ! empty($script))
     {
       self::$scripts[] = xajaxCompressFile($script);
     }
@@ -155,10 +156,10 @@ class xsvc
    * @param  [type] $file [description]
    * @return [type]       [description]
    */
-  public static function installPlugin($file) 
+  public static function installPlugin($file)
   {
     $file = Bundle::path('xsvc')."plugins/{$file}.js";
-    if (file_exists($file) || file_exists(__DIR__.'/'.$file)) 
+    if (file_exists($file) || file_exists(__DIR__.'/'.$file))
     {
       self::$plugins[] = $file;
     }
@@ -168,7 +169,7 @@ class xsvc
    * Start XJAX process requests
    * @return void
    */
-  public static function serve() 
+  public static function serve()
   {
     self::$instance->processRequest();
   }
@@ -177,7 +178,7 @@ class xsvc
    * Create and returns xajaxResponse class
    * @return object=>xajaxResponse
    */
-  public static function response() 
+  public static function response()
   {
     return new xajaxResponse();
   }
@@ -187,9 +188,49 @@ class xsvc
    * @param  string $msg Message to alert
    * @return object=>xajaxResponse
    */
-  public static function alert($msg) 
+  public static function alert($msg)
   {
     $r = self::response()->alert($msg);
     return $r;
+  }
+
+  /**
+   * Register all method in Laravel Task
+   * @param   string  $task
+   * @param   string  $bundle
+   * @return  void
+   */
+  public static function registerAllTaskMethod($task, $bundle = 'application')
+  {
+    $taskIns = Command::resolve($bundle, $task);
+
+    if ($taskIns)
+    {
+      if ($reflect = new ReflectionClass($taskIns))
+      {
+        foreach ($reflect->getMethods() as $method)
+        {
+          self::$instance->register(XAJAX_FUNCTION, array($taskIns, $method->name));
+        }
+      }
+    }
+  }
+
+  /**
+   * Register Laravel Task
+   * @param   string  $task
+   * @param   string  $method
+   * @param   string  $bundle
+   * @return  void
+   */
+  public static function registerTask($task, $method, $bundle = 'application')
+  {
+    $taskIns = Command::resolve($bundle, $task);
+
+    if ($taskIns)
+    {
+      $alias = ($bundle == 'application' ? '' : $bundle . '_' ) . $task . '_' . $method;
+      self::$instance->register(XAJAX_FUNCTION, array($taskIns, $method));
+    }
   }
 }
